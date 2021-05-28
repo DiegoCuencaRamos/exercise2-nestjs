@@ -60,6 +60,7 @@ export class ListController {
     @Delete('/delete/:listId')
     async deteleList(@Res() res, @Param('listId') listId) {
         try {
+            await this.listService.deleteAllTasksInList(listId)
             const list = await this.listService.deleteList(listId)
 
             if (!list) {

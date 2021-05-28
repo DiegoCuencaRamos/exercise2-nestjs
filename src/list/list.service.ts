@@ -43,11 +43,12 @@ export class ListService {
 
     async deleteAllTasksInList(listId: string): Promise<void> {
         const list = await this.listModel.findById(listId)
-        await this.taskModel.deleteMany({ list: list._id })
+        if(list) {
+            await this.taskModel.deleteMany({ list: list._id })
+        } 
     }
 
     async deleteList(listId: string): Promise<List> {
-        await this.deleteAllTasksInList(listId)
         const deletedList = await this.listModel.findByIdAndDelete(listId)
         return deletedList
     }

@@ -1,21 +1,21 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { TaskController } from './task/task.controller';
 import { TaskModule } from './task/task.module';
-import { ListController } from './list/list.controller';
-import { ListService } from './list/list.service';
 import { ListModule } from './list/list.module';
-import { BoardController } from './board/board.controller';
 import { BoardModule } from './board/board.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost/nest-exercise'),
+    MongooseModule.forRoot(`mongodb://mongoadmin:secret@mongo/nest-exercise?authSource=admin`),
     TaskModule,
     ListModule,
     BoardModule
   ],
-  controllers: [],
-  providers: []
+  controllers: [AppController],
+  providers: [AppService]
 })
 export class AppModule {}
+
+// ${process.env.APP_HOST}

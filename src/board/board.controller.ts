@@ -9,6 +9,9 @@ export class BoardController {
 
     @Post('/create')
     async createBoard(@Res() res, @Body() createBoardDto: CreateBoardDto) {
+        const board = await this.boardService.createBoard(createBoardDto)
+        return res.status(HttpStatus.OK).json(board)
+
         try {
             const board = await this.boardService.createBoard(createBoardDto)
             return res.status(HttpStatus.OK).json(board)
@@ -58,8 +61,9 @@ export class BoardController {
     }
 
     @Delete('/delete/:boardId')
-    async deteleBoard(@Res() res, @Param('boardId') boardId) {
+    async deteleBoard(@Res() res, @Param('boardId') boardId) {        
         try {
+            await this.boardService.deleteAllDataInBoard(boardId)
             const board = await this.boardService.deleteBoard(boardId)
 
             if (!board) {

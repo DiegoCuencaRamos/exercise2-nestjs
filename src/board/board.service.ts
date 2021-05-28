@@ -35,14 +35,30 @@ export class BoardService {
         return updatedBoard
     }
 
-    async deleteAllLsitsInBoard(boardId: string): Promise<void> {
-        const board = await this.listModel.findById(boardId)
-        await this.listModel.deleteMany({ list: board._id })
+    async deleteAllDataInBoard(boardId: string): Promise<void> {
+
+        // Find board
+        const board = await this.boardModel.findById(boardId)
+
+        if(board) {
+            // Find lists
+            const lists = await this.listModel.find({ board: board._id })
+
+            if(lists !== []) {
+                //Remove all tasks in list
+                lists.forEach(async (list) => 
+                    await this.taskModel.deleteMany({ list: list._id })
+                )
+            }
+
+            // Remove lists
+            await this.listModel.deleteMany({ board: board._id })
+        }
     }
 
     async deleteBoard(boardId: string): Promise<Board> {
-        await this.deleteAllLsitsInBoard(boardId)
         const deletedBoard = await this.boardModel.findByIdAndDelete(boardId)
         return deletedBoard
     }
 }
+
